@@ -13,6 +13,11 @@ cap = webcam.WebcamVideoStream(src=0).start()
 print ("Camera opened : " + str(cap.isOpened()))
 
 win_name = 'frame'
+win_hue = "Hue - Teinte"
+win_sat = "Saturation"
+win_val = "Value - Valeur"
+win_gray = "Gray values - Niveaux de gris"
+
 want_to_exit = False
 
 ## Creation de la fenêtre avant la boucle
@@ -38,8 +43,12 @@ while (not want_to_exit and cv2.getWindowProperty(win_name, 0) >= 0 ):
     ## Gestion de la lecture
     retval, frame = cap.read()
 
-
     ## Pipeline
+    img_gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+    img_hsv = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
+
+    img_h, img_s, img_v = cv2.split(img_hsv)
+
 
     ## Affichage et autres sorties
     if (counter >= 30 ):
@@ -52,6 +61,10 @@ while (not want_to_exit and cv2.getWindowProperty(win_name, 0) >= 0 ):
     counter += 1
     
     cv2.imshow(win_name, frame)
+    cv2.imshow(win_hue, img_h)
+    cv2.imshow(win_sat, img_s)
+    cv2.imshow(win_val, img_v)
+    cv2.imshow(win_gray, img_gray)
     
     ## Gestion des entrées
     key_val = cv2.waitKey(1) & 0xFF
