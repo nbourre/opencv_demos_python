@@ -1,19 +1,18 @@
 import cv2
 import WebcamVideoStream as webcam
-import numpy as np
+import sys
 import time
 
 
 print ("OpenCV version : " + cv2.__version__)
 
-cap = webcam.WebcamVideoStream(src=0).start()
+cap = webcam.WebcamVideoStream(sys.argv[0]).start()
 #cap = cv2.VideoCapture(0)
 
 
 print ("Camera opened : " + str(cap.isOpened()))
 
 win_name = 'frame'
-win_sobel = 'sobel'
 want_to_exit = False
 
 ## Creation de la fenêtre avant la boucle
@@ -39,22 +38,8 @@ while (not want_to_exit and cv2.getWindowProperty(win_name, 0) >= 0 ):
     ## Gestion de la lecture
     retval, frame = cap.read()
 
-    ## Pipeline
-    gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
-    
-    # Calcul en X
-    sobelx64f = cv2.Sobel(gray, cv2.CV_64F, 1, 0)
-    abs_sobelx64f = np.absolute(sobelx64f)
-    
-    # Calcul en Y
-    sobely64f = cv2.Sobel(gray, cv2.CV_64F, 0, 1)
-    abs_sobely64f = np.absolute(sobely64f)
-    
-    # Somme ponderee
-    sobel_64f = cv2.addWeighted(abs_sobelx64f, 0.5, abs_sobely64f, 0.5, 0)
 
-    # Conversion en 8 bit
-    sobel_8u = np.uint8(sobel_64f)
+    ## Pipeline
 
     ## Affichage et autres sorties
     if (counter >= 30 ):
@@ -67,13 +52,12 @@ while (not want_to_exit and cv2.getWindowProperty(win_name, 0) >= 0 ):
     counter += 1
     
     cv2.imshow(win_name, frame)
-    cv2.imshow(win_sobel, sobel_8u)
-
+    
     ## Gestion des entrées
     key_val = cv2.waitKey(1) & 0xFF
     if key_val == 27:
         want_to_exit = True
 
-
+    
 cv2.destroyAllWindows()
 cap.release()
