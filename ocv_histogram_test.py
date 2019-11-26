@@ -52,6 +52,21 @@ deltaTime = 0
 counter = 1
 time_acc = 0
 
+# init plot
+fig, ax = plt.subplots()
+ax.set_title('Histogram (hue)')
+ax.set_xlabel('Bin')
+ax.set_ylabel('Frequency')
+
+lw = 3
+alpha = 0.5
+bins = 256
+
+lineGray, = ax.plot(np.arange(bins), np.zeros((bins,1)), c='k', lw=lw)
+ax.set_xlim(0, bins-1)
+ax.set_ylim(0, 1)
+plt.ion()
+plt.show()
 
 while (not want_to_exit and cv2.getWindowProperty(win_name, 0) >= 0 ):
 
@@ -76,6 +91,7 @@ while (not want_to_exit and cv2.getWindowProperty(win_name, 0) >= 0 ):
 
     hist = cv2.calcHist([img_hue], [0], None, [bins], [0, bins]) / num_pixels
 
+    lineGray.set_ydata(hist)
 
     cv2.rectangle(frame, (left_roi, top_roi), (left_roi + (right_roi - left_roi), top_roi + (bottom_roi - top_roi)), (0, 255, 0), 2)
     
@@ -90,10 +106,11 @@ while (not want_to_exit and cv2.getWindowProperty(win_name, 0) >= 0 ):
     counter += 1
     
     cv2.imshow(win_name, frame)
-    cv2.imshow(win_roi, roi)
-    cv2.imshow(win_roi_2, roi_2)
+    #cv2.imshow(win_roi, roi)
+    #cv2.imshow(win_roi_2, roi_2)
     cv2.imshow(win_hue, img_hue)
 
+    fig.canvas.draw()
     
     ## Gestion des entrées
     key_val = cv2.waitKey(1) & 0xFF

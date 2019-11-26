@@ -3,22 +3,14 @@
     // Hover to view descriptions of existing attributes.
     // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
     "version": "0.2.0",
-    "configurations": [{
-            "name": "Python: Lego Home",
-            "type": "python",
-            "request": "launch",
-            "program": "${file}",
-            "console": "integratedTerminal",
-            "args": ["D:\\temp\\test.mkv"]
-        },
-
+    "configurations": [
         {
-            "name": "Python: Dashcam file",
+            "name": "Python: Morph - Img",
             "type": "python",
             "request": "launch",
             "program": "${file}",
-            "console": "integratedTerminal",
-            "args": ["c:\\temp\\dashcam.jpg"]
+            "console": "externalTerminal",
+            "args": ["res\\binary_text.jpg"]
         },
         {
             "name": "Python: Current File",
@@ -28,12 +20,55 @@
             "console": "integratedTerminal"
         },
         {
-            "name": "Python: Lego Office",
+            "name": "Python: Lego Home",
             "type": "python",
             "request": "launch",
             "program": "${file}",
             "console": "integratedTerminal",
-            "args": ["C:\\Users\\nbourre\\odrive\\Google_Drive_College\\_college\\_cours\\matières génériques\\ressources\\lego\\Ms Vertical-1.m4v"]
-        }
+            "args": [
+                "D:\\temp\\test.mkv"
+            ]
+        },
+        {
+            "name": "Python: Dashcam file",
+            "type": "python",
+            "request": "launch",
+            "program": "${file}",
+            "console": "integratedTerminal",
+            "args": [
+                "c:\\temp\\dashcam.jpg"
+            ]
+        },
+        {
+            "name": "Python: Calib",
+            "type": "python",
+            "request": "launch",
+            "program": "${file}",
+            "console": "externalTerminal",
+            "args": [
+                "C:\\Users\\nbourre\\odrive\\Google_Drive_College\\_college\\_cours\\matières génériques\\ressources\\lego\\Ms Vertical - no light - calib.m4v"
+            ]
+        },
+        {
+            "name": "Python: Lego Office",
+            "type": "python",
+            "request": "launch",
+            "program": "${file}",
+            "console": "externalTerminal",
+            "args": [
+                "C:\\Users\\nbourre\\odrive\\Google_Drive_College\\_college\\_cours\\matières génériques\\ressources\\lego\\Ms Vertical - no light - no blacks.m4v"
+            ]
+        },
+        {
+            "name": "Python: Mask",
+            "type": "python",
+            "request": "launch",
+            "program": "${file}",
+            "console": "externalTerminal",
+            "args": [
+                "C:\\Users\\nbourre\\odrive\\Google_Drive_College\\_college\\_cours\\matières génériques\\ressources\\lego\\Ms Vertical - no light - no blacks.m4v",
+                "C:\\temp\\template_vertical.jpg"
+            ]
+        },
     ]
 }
