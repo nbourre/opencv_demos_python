@@ -52,6 +52,7 @@ deltaTime = 0
 counter = 1
 time_acc = 0
 
+bins = 256
 
 while (not want_to_exit and cv2.getWindowProperty(win_name, 0) >= 0 ):
 
