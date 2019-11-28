@@ -2,7 +2,7 @@ import cv2
 
 print ("OpenCV version : " + cv2.__version__)
 
-cap = cv2.VideoCapture(0)
+cap = cv2.VideoCapture(1)
 
 print ("Camera opened : " + str(cap.isOpened()))
 

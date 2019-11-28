@@ -65,6 +65,8 @@ img_outputA = np.zeros(frame.shape, np.uint8)
 img_outputB = np.zeros(frame.shape, np.uint8)
 
 reducing_factor = 4
+factor_array = [reducing_factor, reducing_factor]
+
 img_small = np.zeros([int(img_height / reducing_factor), int(img_width / reducing_factor), frame.shape[2]], np.uint8)
 small_dim = (img_small.shape[1], img_small.shape[0])
 
@@ -79,20 +81,20 @@ while (not want_to_exit and cv2.getWindowProperty(win_name, 0) >= 0 ):
 
     ## Gestion de la lecture
     retval, frame = cap.read()
-    #img_small = cv2.resize(frame, small_dim)
-    img_gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+    img_small = cv2.resize(frame, small_dim)
+    img_gray = cv2.cvtColor(img_small, cv2.COLOR_BGR2GRAY)
     
     ## Pipeline
     retVal, img_thresh = cv2.threshold(img_gray, thresh_val, 255, cv2.THRESH_BINARY_INV)
     img_temp, contours, hierarchy = cv2.findContours(img_thresh, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
 
-
+    rescaled_contours = [np.floor_divide(contour, 1/reducing_factor) for contour in contours]
 
     # Trace tous les contours
-    img_outputA = cv2.drawContours(img_outputA, contours, -1, (0,255,0), 1)
+    img_outputA = cv2.drawContours(img_outputA, rescaled_contours, -1, (0,255,0), 1)
 
     # Trace que le 4e contour
-    cnt = contours[3]
+    cnt = rescaled_contours[3]
     img_outputB = cv2.drawContours(img_outputB, cnt, 0, (255,255,0), 2)
 
     ## Affichage et autres sorties
