@@ -99,6 +99,7 @@ while (not want_to_exit and cv2.getWindowProperty(win_name, 0) >= 0 ):
         elif im.shape[2] == 3:
             color = [ (255,0,0),(0,255,0),(0,0,255) ]
 
+        # enumerate retourne l'index avec l'énumérateur
         for ch, col in enumerate(color):
             hist_item = cv2.calcHist([im],[ch],None,[256],[0,256])
 
@@ -106,11 +107,19 @@ while (not want_to_exit and cv2.getWindowProperty(win_name, 0) >= 0 ):
             hist_max = np.amax(hist_item)
             hist_max_idx = np.argmax(hist_item)
 
+            # Normalisation pour caper à 255
             cv2.normalize(hist_item,hist_item,0,255,cv2.NORM_MINMAX)
+
+            # Arrondi et cast les valeurs
             hist=np.int32(np.around(hist_item))
+
+            # Creation de la matrice de points
             pts = np.int32(np.column_stack((bins,hist)))
+
+            # Traçage de l'histrogramme avec les points
             cv2.polylines(img_histo,[pts],False,col)
 
+        # flip l'image
         img_histo=np.flipud(img_histo)
         
 
