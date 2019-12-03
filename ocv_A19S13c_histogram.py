@@ -139,7 +139,7 @@ while (not want_to_exit and cv2.getWindowProperty(win_name, 0) >= 0 ):
 
         txt_orig = (img_histo.shape[1] - (txt_width + 10), img_histo.shape[0] - 40)
         
-        # Why it works???
+        # Why it works??? Might me because img_histo is read-only
         # Src : https://stackoverflow.com/questions/36042508/opencv-puttext-in-python-error-after-array-manipulation
         img_histo_output = img_histo.copy()
 
