@@ -1,12 +1,12 @@
 import cv2
-import WebcamVideoStream as webcam
+import VideoStream as webcam
 import numpy as np
 import time
 
 
 print ("OpenCV version : " + cv2.__version__)
 
-cap = webcam.VideoStream(src=0).start()
+cap = webcam.VideoStream(1).start()
 #cap = cv2.VideoCapture(0)
 
 
