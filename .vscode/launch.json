@@ -5,12 +5,21 @@
     "version": "0.2.0",
     "configurations": [
         {
+            "name": "Python: Camera no args",
+            "type": "python",
+            "request": "launch",
+            "program": "${file}",
+            "console": "externalTerminal"
+        },
+        {
             "name": "Python: Morph - Img",
             "type": "python",
             "request": "launch",
             "program": "${file}",
             "console": "externalTerminal",
-            "args": ["res\\binary_text.jpg"]
+            "args": [
+                "res\\binary_text.jpg"
+            ]
         },
         {
             "name": "Python: Current File",
