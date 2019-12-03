@@ -6,7 +6,7 @@ import time
 
 print ("OpenCV version : " + cv2.__version__)
 
-cap = webcam.WebcamVideoStream().start()
+cap = webcam.VideoStream().start()
 #cap = cv2.VideoCapture(0)
 
 

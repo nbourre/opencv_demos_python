@@ -1,5 +1,5 @@
 import cv2
-import WebcamVideoStream as webcam
+import VideoStream as webcam
 import sys
 import time
 from matplotlib import pyplot as plt
@@ -23,7 +23,7 @@ def hist_curve(im):
     return y
 
 
-cap = webcam.WebcamVideoStream(sys.argv[1]).start()
+cap = webcam.VideoStream(sys.argv[1]).start()
 #cap = cv2.VideoCapture(0)
 
 
@@ -68,6 +68,14 @@ counter = 1
 time_acc = 0
 pause = False
 
+## Truc de texte
+font = cv2.FONT_HERSHEY_SIMPLEX
+txt_left = 10
+txt_top = img_height - 40
+txt_scale = 1
+txt_color = (255, 255, 255)
+txt_thickness = 2
+
 while (not want_to_exit and cv2.getWindowProperty(win_name, 0) >= 0 ):
 
     ## Gestion de temps
@@ -92,22 +100,51 @@ while (not want_to_exit and cv2.getWindowProperty(win_name, 0) >= 0 ):
 
         im = img_hue
 
-        img_histo = np.zeros((300,256,3))
+        img_histo = np.zeros((300,256,3), np.uint8)
 
         if len(im.shape) == 2:
             color = [(255,255,255)]
         elif im.shape[2] == 3:
             color = [ (255,0,0),(0,255,0),(0,0,255) ]
 
+        # enumerate retourne l'index avec l'énumérateur
         for ch, col in enumerate(color):
             hist_item = cv2.calcHist([im],[ch],None,[256],[0,256])
+
+            # Récupérer la valeur maximum
+            hist_max = np.amax(hist_item)
+            hist_max_idx = np.argmax(hist_item)
+
+            # Normalisation pour caper à 255
             cv2.normalize(hist_item,hist_item,0,255,cv2.NORM_MINMAX)
+
+            # Arrondi et cast les valeurs
             hist=np.int32(np.around(hist_item))
+
+            # Creation de la matrice de points
             pts = np.int32(np.column_stack((bins,hist)))
+
+            # Traçage de l'histrogramme avec les points
             cv2.polylines(img_histo,[pts],False,col)
 
+        # flip l'image
         img_histo=np.flipud(img_histo)
         
+        # Textes
+        txt = "End : " + str(hist_max_idx)
+        size, baseline = cv2.getTextSize(txt, font, txt_scale, txt_thickness)
+        baseline += txt_thickness
+        txt_width = size[0]
+        txt_height = size[1]
+
+        txt_orig = (img_histo.shape[1] - (txt_width + 10), img_histo.shape[0] - 40)
+        
+        # Why it works??? Might me because img_histo is read-only
+        # Src : https://stackoverflow.com/questions/36042508/opencv-puttext-in-python-error-after-array-manipulation
+        img_histo_output = img_histo.copy()
+
+        cv2.putText(img_histo_output, txt, txt_orig, font, txt_scale, txt_color, txt_thickness, cv2.LINE_AA)
+
 
         ## Affichage et autres sorties
         if (counter >= 30 ):
@@ -115,14 +152,14 @@ while (not want_to_exit and cv2.getWindowProperty(win_name, 0) >= 0 ):
             avg  =  time_acc / 30.0
             time_acc = 0
 
-            print ( " Average per cycle : " + str (avg))
+            #print ( " Average per cycle : " + str (avg))
 
         counter += 1
     
     cv2.imshow(win_name, frame)
     #cv2.imshow(win_roi, roi)
     cv2.imshow(win_roi_2, roi_2)
-    cv2.imshow(win_hue, img_histo)
+    cv2.imshow(win_hue, img_histo_output)
 
     
     ## Gestion des entrées
