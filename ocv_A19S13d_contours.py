@@ -1,5 +1,5 @@
 import cv2
-import WebcamVideoStream as webcam
+import VideoStream as webcam
 import sys
 import time
 import numpy as np
@@ -8,6 +8,25 @@ display_fps = False
 
 print ("OpenCV version : " + cv2.__version__)
 
+
+def simple_text (img, text='Hello!', left=10, top=10, scale=1, color=(255, 255, 255)):
+    ## Truc de texte
+    font = cv2.FONT_HERSHEY_SIMPLEX
+    txt_left = left
+    txt_top = top
+    txt_scale = scale
+    txt_color = color
+    txt_thickness = 1
+
+    txt = text
+    size, baseline = cv2.getTextSize(txt, font, txt_scale, txt_thickness)
+    baseline += txt_thickness
+    txt_width = size[0]
+    txt_height = size[1]
+
+    txt_orig = (txt_left, txt_top + txt_height)
+
+    return cv2.putText(img, txt, txt_orig, font, txt_scale, txt_color, txt_thickness, cv2.LINE_AA)
 
 cap = webcam.VideoStream(1).start()
 
@@ -61,9 +80,16 @@ time_acc = 0
 thresh_val = 199
 inc_value = 2
 
+area_min = 200
+area_max = 7000
+inc_area_value = 20
+
+img_outputA = np.zeros(frame.shape, np.uint8)
+img_outputB = np.zeros(frame.shape, np.uint8)
+
 reducing_factor = 4
 
-img_small_dim = (img_height // reducing_factor, img_width // reducing_factor)
+img_small_dim = (img_width // reducing_factor, img_height // reducing_factor)
 
 while not want_to_exit and cv2.getWindowProperty(win_name, 0) >= 0:
 
@@ -73,6 +99,10 @@ while not want_to_exit and cv2.getWindowProperty(win_name, 0) >= 0:
     previousTime = currentTime
     
     time_acc += deltaTime
+
+    # Reset les outputs
+    img_outputA.fill(0)
+    img_outputB.fill(0)
 
     ## Gestion de la lecture
     retval, frame = cap.read()
@@ -85,12 +115,30 @@ while not want_to_exit and cv2.getWindowProperty(win_name, 0) >= 0:
 
     rescaled_contours = [np.multiply(contour, reducing_factor) for contour in contours]
 
+    # On trie selon la  superfice du contour
+    rescaled_contours = sorted(rescaled_contours, key=cv2.contourArea, reverse=True)
+
     # Trace tous les contours
     img_outputA = cv2.drawContours(img_outputA, rescaled_contours, -1, (0,255,0), 1)
 
-    # Trace que le 4e contour
-    cnt = rescaled_contours[3]
-    img_outputB = cv2.drawContours(img_outputB, cnt, 0, (255,255,0), 2)
+    # Tracage des rectangles
+    for cnt in rescaled_contours:
+        M = cv2.moments(cnt)
+
+        area = M['m00']
+         
+
+        if area > area_min and area < area_max :
+            # Centroide
+            cx = int(M['m10']/M['m00'])
+            cy = int(M['m01']/M['m00'])
+
+            rect = cv2.minAreaRect(cnt) # Trouve le plus petit rectangle englobant
+            box = cv2.boxPoints(rect) # retourne les 4 sommets du rectangle
+            box = np.int0(box) # Conversion en entier
+
+            simple_text(img_outputA, "{:.0f}".format(area), cx, cy, 0.5)
+            cv2.drawContours(img_outputA, [box], -1, (0, 0, 200), 1)
 
     ## Affichage et autres sorties
     if counter >= 30:
@@ -120,7 +168,18 @@ while not want_to_exit and cv2.getWindowProperty(win_name, 0) >= 0:
     elif key_val == ord('-'):
         thresh_val = max (0, thresh_val - inc_value)
         print ('thresh_val = ' + str(thresh_val))
-
+    elif key_val == ord('q'):
+        area_min = max(1, area_min - inc_area_value)
+        print ('area_min = ' + str (area_min))
+    elif key_val == ord('w'):
+        area_min = area_min + inc_area_value
+        print ('area_min = ' + str (area_min))
+    elif key_val == ord('a'):
+        area_max = max(1, area_max - inc_area_value)
+        print ('area_max = ' + str (area_max))
+    elif key_val == ord('s'):
+        area_max = area_max + inc_area_value
+        print ('area_max = ' + str (area_max))    
     
 cv2.destroyAllWindows()
 cap.release()
