@@ -10,7 +10,7 @@ print ("OpenCV version : " + cv2.__version__)
 is_camera = len(sys.argv) == 1
 
 if (is_camera) :
-    cap = webcam.WebcamVideoStream(1).start()
+    cap = webcam.VideoStream(1).start()
     retval, frame = cap.read()
 else :
     frame = cv2.imread(sys.argv[1])

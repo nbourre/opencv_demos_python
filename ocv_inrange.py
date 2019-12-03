@@ -2,7 +2,7 @@ import cv2
 import numpy as np
 import WebcamVideoStream as webcam
 
-cap = webcam.WebcamVideoStream(1).start()
+cap = webcam.VideoStream(1).start()
 
 kernel = np.ones((5, 5), np.uint8)
 iterations = 1

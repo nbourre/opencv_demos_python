@@ -8,7 +8,7 @@ import numpy as np
 print ("OpenCV version : " + cv2.__version__)
 
 
-cap = webcam.WebcamVideoStream(sys.argv[1]).start()
+cap = webcam.VideoStream(sys.argv[1]).start()
 #cap = cv2.VideoCapture(0)
 
 

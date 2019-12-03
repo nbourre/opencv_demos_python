@@ -10,7 +10,7 @@ print ("OpenCV version : " + cv2.__version__)
 filename = sys.argv[1]
 folder = os.path.dirname(filename)
 
-cap = webcam.WebcamVideoStream(1).start()
+cap = webcam.VideoStream(1).start()
 #cap = cv2.VideoCapture(0)
 
 

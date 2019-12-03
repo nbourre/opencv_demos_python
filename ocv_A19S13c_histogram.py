@@ -23,7 +23,7 @@ def hist_curve(im):
     return y
 
 
-cap = webcam.WebcamVideoStream(sys.argv[1]).start()
+cap = webcam.VideoStream(sys.argv[1]).start()
 #cap = cv2.VideoCapture(0)
 
 
@@ -101,6 +101,11 @@ while (not want_to_exit and cv2.getWindowProperty(win_name, 0) >= 0 ):
 
         for ch, col in enumerate(color):
             hist_item = cv2.calcHist([im],[ch],None,[256],[0,256])
+
+            # Récupérer la valeur maximum
+            hist_max = np.amax(hist_item)
+            hist_max_idx = np.argmax(hist_item)
+
             cv2.normalize(hist_item,hist_item,0,255,cv2.NORM_MINMAX)
             hist=np.int32(np.around(hist_item))
             pts = np.int32(np.column_stack((bins,hist)))
