@@ -24,7 +24,7 @@ def simple_text (img, text='Hello!', left=10, top=10, scale=1, color=(255, 255, 
     txt_width = size[0]
     txt_height = size[1]
 
-    txt_orig = (txt_left, txt_top + txt_height)
+    txt_orig = (txt_left - (txt_width // 2), txt_top + txt_height - (txt_height // 2))
 
     return cv2.putText(img, txt, txt_orig, font, txt_scale, txt_color, txt_thickness, cv2.LINE_AA)
 
