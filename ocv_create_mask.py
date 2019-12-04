@@ -1,6 +1,6 @@
 import os
 import cv2
-import WebcamVideoStream as webcam
+import VideoStream as webcam
 import sys
 import time
 

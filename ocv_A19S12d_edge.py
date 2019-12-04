@@ -1,12 +1,12 @@
 import cv2
-import WebcamVideoStream as webcam
+import VideoStream as webcam
 import numpy as np
 import time
 
 
 print ("OpenCV version : " + cv2.__version__)
 
-cap = webcam.VideoStream(src=0).start()
+cap = webcam.VideoStream(src=1).start()
 #cap = cv2.VideoCapture(0)
 
 
@@ -45,10 +45,12 @@ while (not want_to_exit and cv2.getWindowProperty(win_name, 0) >= 0 ):
     # Calcul en X
     sobelx64f = cv2.Sobel(gray, cv2.CV_64F, 1, 0)
     abs_sobelx64f = np.absolute(sobelx64f)
+    cv2.imshow("text x", cv2.convertScaleAbs(sobelx64f))
     
     # Calcul en Y
     sobely64f = cv2.Sobel(gray, cv2.CV_64F, 0, 1)
     abs_sobely64f = np.absolute(sobely64f)
+    cv2.imshow("text y", cv2.convertScaleAbs(sobely64f))
     
     # Somme ponderee
     sobel_64f = cv2.addWeighted(abs_sobelx64f, 0.5, abs_sobely64f, 0.5, 0)

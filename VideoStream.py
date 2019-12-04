@@ -11,6 +11,7 @@ class VideoStream:
         
         self.prop_framecount = self.stream.get (cv2.CAP_PROP_FRAME_COUNT)
         self.loopback = self.prop_framecount > 0
+        self.loop_counter = 0
 
         (self.grabbed, self.frame) = self.stream.read()
  
@@ -41,6 +42,7 @@ class VideoStream:
             if (self.loopback):
                 if (self.stream.get (cv2.CAP_PROP_POS_FRAMES) >= self.prop_framecount):
                     self.stream.set (cv2.CAP_PROP_POS_FRAMES, 0)
+                    self.loop_counter = self.loop_counter + 1
             
             if (self.delay > 0):
 
