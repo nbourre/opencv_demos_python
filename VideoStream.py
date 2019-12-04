@@ -1,5 +1,6 @@
 from threading import Thread
 import cv2
+import time
 
 class VideoStream:
     def __init__(self, src=0):
@@ -16,6 +17,8 @@ class VideoStream:
 		# initialize the variable used to indicate if the thread should
 		# be stopped
         self.stopped = False
+        self.delay = -1
+        self.pause = False
     
     def start(self):
 		# start the thread to read frames from the video stream
@@ -24,18 +27,41 @@ class VideoStream:
         return self
 
     def update(self):
+        time_acc = 0
+        grab_it = True
+        previous_time = 0
+
 		# keep looping infinitely until the thread is stopped
         while True:
 			# if the thread indicator variable is set, stop the thread
             if self.stopped:
                 return
             
+            
             if (self.loopback):
                 if (self.stream.get (cv2.CAP_PROP_POS_FRAMES) >= self.prop_framecount):
                     self.stream.set (cv2.CAP_PROP_POS_FRAMES, 0)
+            
+            if (self.delay > 0):
 
-			# otherwise, read the next frame from the stream
-            (self.grabbed, self.frame) = self.stream.read()
+                ## Better time management that waitKey()
+                current_time = int (round (time.time() * 1000))
+                delta_time = current_time - previous_time
+                previous_time = current_time
+
+                time_acc += delta_time
+                
+                grab_it = False
+
+                if time_acc >= self.delay:
+                    grab_it = True
+                    time_acc = 0
+            else:
+                grab_it = True
+
+            if not self.pause and grab_it:
+			    # otherwise, read the next frame from the stream
+                (self.grabbed, self.frame) = self.stream.read()
 
     def read(self):
 		# return the frame most recently read

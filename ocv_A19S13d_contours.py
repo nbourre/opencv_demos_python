@@ -28,7 +28,12 @@ def simple_text (img, text='Hello!', left=10, top=10, scale=1, color=(255, 255, 
 
     return cv2.putText(img, txt, txt_orig, font, txt_scale, txt_color, txt_thickness, cv2.LINE_AA)
 
-cap = webcam.VideoStream(1).start()
+if len(sys.argv) > 1 :
+    src = sys.argv[1]
+else:
+    src = 1    
+
+cap = webcam.VideoStream(src).start()
 
 
 #cap = cv2.VideoCapture(0)

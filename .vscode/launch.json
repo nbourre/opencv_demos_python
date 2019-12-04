@@ -35,7 +35,7 @@
             "program": "${file}",
             "console": "integratedTerminal",
             "args": [
-                "D:\\temp\\test.mkv"
+                "D:\\temp\\test.m4v"
             ]
         },
         {
