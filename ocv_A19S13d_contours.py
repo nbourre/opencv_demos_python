@@ -9,14 +9,14 @@ display_fps = False
 print ("OpenCV version : " + cv2.__version__)
 
 
-def simple_text (img, text='Hello!', left=10, top=10, scale=1, color=(255, 255, 255)):
+def simple_text (img, text='Hello!', left=10, top=10, scale=1, color=(255, 255, 255), thickness = 1):
     ## Truc de texte
     font = cv2.FONT_HERSHEY_SIMPLEX
     txt_left = left
     txt_top = top
     txt_scale = scale
     txt_color = color
-    txt_thickness = 1
+    txt_thickness = thickness
 
     txt = text
     size, baseline = cv2.getTextSize(txt, font, txt_scale, txt_thickness)
