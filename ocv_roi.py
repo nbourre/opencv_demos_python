@@ -1,13 +1,17 @@
 import cv2
-import WebcamVideoStream as webcam
+import VideoStream as webcam
 import sys
 import time
 
 
 print ("OpenCV version : " + cv2.__version__)
 
+if len(sys.argv) > 1 :
+    src = sys.argv[1]
+else:
+    src = 1
 
-cap = webcam.VideoStream(sys.argv[1]).start()
+cap = webcam.VideoStream(src).start()
 #cap = cv2.VideoCapture(0)
 
 

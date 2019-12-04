@@ -22,8 +22,12 @@ def hist_curve(im):
     y=np.flipud(h)
     return y
 
+if len(sys.argv) > 1 :
+    src = sys.argv[1]
+else:
+    src = 1
 
-cap = webcam.VideoStream(sys.argv[1]).start()
+cap = webcam.VideoStream(src).start()
 #cap = cv2.VideoCapture(0)
 
 
@@ -168,6 +172,13 @@ while (not want_to_exit and cv2.getWindowProperty(win_name, 0) >= 0 ):
         want_to_exit = True
     if key_val == ord(' '):
         pause = not pause
+        cap.pause = pause
+    if key_val == ord('z'):
+        cap.delay = max(0, cap.delay - 1)
+        print ("Capture delay = " + str (cap.delay))
+    if key_val == ord('x'):
+        cap.delay = cap.delay + 1
+        print ("Capture delay = " + str (cap.delay))
 
     
 cv2.destroyAllWindows()
