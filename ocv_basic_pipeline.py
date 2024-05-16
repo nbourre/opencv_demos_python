@@ -1,6 +1,5 @@
 import sys
 import cv2
-import WebcamVideoStream as webcam
 
 import time
 
@@ -10,7 +9,7 @@ print ("OpenCV version : " + cv2.__version__)
 is_camera = len(sys.argv) == 1
 
 if (is_camera) :
-    cap = webcam.VideoStream(1).start()
+    cap = cv2.VideoCapture(0)
     retval, frame = cap.read()
 else :
     frame = cv2.imread(sys.argv[1])
