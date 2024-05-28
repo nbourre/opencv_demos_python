@@ -7,7 +7,8 @@ import os
 # Load the image
 input_dir = "data/"
 output_dir = "res/"
-image_filename = "PXL_20240514_213157432.jpg"
+# image_filename = "PXL_20240514_213157432.jpg"
+image_filename = "justin_01.jpg"
 image_path = os.path.join(input_dir, image_filename)
 image = cv2.imread(image_path)
 image_rgb = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
