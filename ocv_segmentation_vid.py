@@ -27,7 +27,7 @@ frame_count = int(cap.get(cv2.CAP_PROP_FRAME_COUNT))
 #fourcc = cv2.VideoWriter_fourcc(*'mp4v')
 #out = cv2.VideoWriter(output_video_path, fourcc, fps, (width, height))
 
-scale_percent = 640 / width
+scale_percent = 320 / width
 
 new_width = int(width * scale_percent)
 new_height = int(height * scale_percent)
@@ -50,7 +50,7 @@ while cap.isOpened():
     # new_width = int(frame.shape[1] * scale_percent)
     # new_height = int(frame.shape[0] * scale_percent)
     
-    dim = ( new_height, new_width)    
+    dim = ( new_width, new_height)    
     frame_resized = cv2.resize(frame_rgb, dim, interpolation=cv2.INTER_AREA)
 
     # Convert to HSL color space
@@ -82,6 +82,8 @@ while cap.isOpened():
 
     # Create an empty mask to store the weeds
     weed_mask = np.zeros_like(mask_cleaned)
+    
+    
 
     # Iterate over the regions and keep only those that have the expected size and shape of weeds
     for region in regions:
@@ -92,20 +94,27 @@ while cap.isOpened():
     # Dilate the final weed mask to group nearby weed regions
     weed_mask_dilated = cv2.dilate(weed_mask, kernel, iterations=5)
 
-    # Label the grouped weed regions
-    grouped_labels = measure.label(weed_mask_dilated, connectivity=2)
-    grouped_regions = measure.regionprops(grouped_labels)
+    # # Label the grouped weed regions
+    # grouped_labels = measure.label(weed_mask_dilated, connectivity=2)
+    # grouped_regions = measure.regionprops(grouped_labels)
 
-    # Create an RGB image to visualize the grouped regions
-    grouped_image = color.label2rgb(grouped_labels, bg_label=0, bg_color=(0, 0, 0), image=frame_resized)
-    grouped_image_uint8 = (grouped_image * 255).astype(np.uint8)  # Convert to uint8
+    # # Create an RGB image to visualize the grouped regions
+    # grouped_image = color.label2rgb(grouped_labels, bg_label=0, bg_color=(0, 0, 0), image=frame_resized)
+    # grouped_image_uint8 = (grouped_image * 255).astype(np.uint8)  # Convert to uint8
 
-    # Convert back to BGR for writing to video file
-    frame_output = cv2.cvtColor(grouped_image_uint8, cv2.COLOR_RGB2BGR)
+    # # Convert back to BGR for writing to video file
+    # frame_output = cv2.cvtColor(grouped_image_uint8, cv2.COLOR_RGB2BGR)
     
-    cv2.imshow("Frame", frame_output)
+    # cv2.imshow("Frame", frame_output)
     
     #out.write(frame_output)
+    
+    cv2.imshow("Original", frame_resized)
+    cv2.imshow("Mask", mask)
+    cv2.imshow("Mask cleaned", mask_cleaned)
+    cv2.imshow("Weed Mask", weed_mask)
+    cv2.imshow("Weed Mask Dilated", weed_mask_dilated)
+    
     
     frame_num += 1
     print(f"Processed frame {frame_num}/{frame_count}")
@@ -113,6 +122,9 @@ while cap.isOpened():
     key = cv2.waitKey(1)
     if key == 27:
         break
+    if key == ord('p'):
+        # Pause the video
+        cv2.waitKey(-1)
 
 
 # Release video objects
